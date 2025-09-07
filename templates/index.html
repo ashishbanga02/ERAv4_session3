@@ -5,7 +5,7 @@
   <title>🚀 NSE Options Guru powered by Gemini</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- Google Fonts for a nicer look -->
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
   <!-- Marked.js for Markdown parsing -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
@@ -13,10 +13,14 @@
       --primary-color: #007bff; /* Blue */
       --secondary-color: #6c757d; /* Gray */
       --accent-color: #28a745; /* Green for highlights */
-      --background-color: #f8f9fa; /* Light Gray */
+      --info-color: #17a2b8; /* Cyan for info */
+      --background-color: #f0f2f5; /* Lighter Gray */
       --card-background: #ffffff; /* White */
       --text-color: #343a40; /* Dark Gray */
       --border-color: #dee2e6; /* Light Border */
+      --bullet-block-bg: #e6f7ff; /* Light blue for bullet blocks */
+      --bullet-block-border: #99e1ff; /* Slightly darker blue border */
+      --bullet-block-text: #004085; /* Dark blue text for bullets */
     }
 
     body {
@@ -26,10 +30,15 @@
       background-color: var(--background-color);
       color: var(--text-color);
       line-height: 1.6;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start; /* Align to top */
+      min-height: 100vh; /* Ensure it takes full viewport height */
     }
 
     .container {
       max-width: 900px;
+      width: 100%; /* Take full width on small screens */
       margin: 30px auto;
       background-color: var(--card-background);
       padding: 30px;
@@ -44,6 +53,7 @@
       margin-bottom: 30px;
       font-size: 2.2em;
       letter-spacing: 0.5px;
+      font-weight: 700;
     }
 
     form {
@@ -57,12 +67,14 @@
       border: 1px solid var(--border-color);
       border-radius: 8px;
       background-color: #f1f7fe; /* Lighter blue tint */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
 
     label {
       font-weight: bold;
       color: var(--secondary-color);
       margin-right: 5px;
+      font-size: 0.95em;
     }
 
     select, button {
@@ -71,10 +83,10 @@
       border-radius: 6px;
       font-size: 1em;
       transition: all 0.3s ease;
+      background-color: white; /* Ensure consistent background */
     }
 
     select {
-      background-color: white;
       min-width: 150px;
       cursor: pointer;
     }
@@ -91,12 +103,13 @@
       cursor: pointer;
       border: none;
       font-weight: bold;
+      letter-spacing: 0.5px;
     }
 
     button:hover {
       background-color: #0056b3;
       transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     }
 
     #analysisOutput {
@@ -116,24 +129,18 @@
       margin-bottom: 15px;
       border-bottom: 2px solid var(--primary-color);
       padding-bottom: 5px;
+      font-weight: 700;
+      font-size: 1.5em;
     }
 
     #analysisOutput p {
       margin-bottom: 1em;
+      color: var(--text-color);
     }
 
     #analysisOutput strong {
       color: var(--accent-color); /* Highlight important terms */
-    }
-
-    #analysisOutput ul {
-      list-style-type: disc;
-      margin-left: 25px;
-      padding-left: 0;
-    }
-
-    #analysisOutput li {
-      margin-bottom: 8px;
+      font-weight: 700;
     }
 
     #analysisOutput em {
@@ -141,10 +148,69 @@
       font-style: italic;
     }
 
+    /* Styling for the new bullet points */
+    #analysisOutput ul {
+      list-style-type: none; /* Remove default bullet */
+      padding: 0;
+      margin: 15px 0;
+    }
+
+    #analysisOutput li {
+      background-color: var(--bullet-block-bg);
+      border: 1px solid var(--bullet-block-border);
+      border-left: 5px solid var(--info-color); /* Emphasize with a thicker left border */
+      margin-bottom: 10px; /* Space between bullet blocks */
+      padding: 12px 15px;
+      border-radius: 8px;
+      color: var(--bullet-block-text);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      font-size: 0.95em;
+      line-height: 1.5;
+    }
+
+    #analysisOutput li strong { /* Ensure strong inside bullets also gets colored */
+        color: inherit; /* Inherit color from the li */
+        text-decoration: underline; /* Add underline for emphasis */
+    }
+    #analysisOutput li p {
+        margin: 0; /* Remove default paragraph margin inside list items */
+        color: inherit; /* Inherit color from the li */
+    }
+
+    /* Styling for nested lists within a bullet block (if Gemini provides them) */
+    #analysisOutput li ul {
+      margin-top: 10px;
+      margin-left: 20px; /* Indent nested lists */
+      list-style-type: circle; /* Use a different bullet for nested items */
+      color: var(--text-color); /* Revert color for nested items */
+      background-color: transparent;
+      border: none;
+      box-shadow: none;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    #analysisOutput li ul li {
+        background-color: transparent;
+        border: none;
+        box-shadow: none;
+        padding: 5px 0; /* Smaller padding for nested items */
+        margin-bottom: 5px;
+        border-left: none; /* No left border for nested items */
+        color: var(--text-color); /* Reset text color for nested items */
+    }
+    #analysisOutput li ul li strong {
+        color: var(--info-color); /* Highlight nested strong in a different color */
+    }
+
+
     /* Responsive adjustments */
     @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
       .container {
-        margin: 15px;
+        margin: 15px 5px;
         padding: 20px;
       }
       h2 {
@@ -180,7 +246,7 @@
     </form>
 
     <div id="analysisOutput">
-      <em>Select a symbol and expiry, then click "Get Insight!" to unleash Gemini's options analysis.</em>
+      <em>Select a symbol and expiry, then click "Get Insight!" to unleash Gemini's powerful options analysis.</em>
     </div>
   </div>
 
@@ -236,7 +302,7 @@
 
       const formData = new FormData(this);
       const output = document.getElementById("analysisOutput");
-      output.innerHTML = '<em>Analyzing... Please wait for the insightful breakdown!</em>'; // Clear and show loading message
+      output.innerHTML = '<em><img src="https://i.imgur.com/E5zFp5A.gif" alt="Loading..." style="vertical-align: middle; margin-right: 10px; width: 24px; height: 24px;">Analyzing... Please wait for the insightful breakdown!</em>'; // Clear and show loading message with GIF
 
       fetch("/stream_analysis", { method: "POST", body: formData })
         .then(response => {
@@ -260,9 +326,14 @@
                       return;
                   }
                   accumulatedContent += msg + '\n'; // Add newline for proper Markdown rendering
-                  output.innerHTML = marked.parse(accumulatedContent); // Render incrementally
+                  // Incrementally update, parsing only the new chunk or the whole thing
+                  // For better performance, you might parse the full content less frequently
+                  // but for readability of streamed content, parsing often is better.
+                  output.innerHTML = marked.parse(accumulatedContent);
                 }
               });
+              // Scroll to bottom if content overflows
+              output.scrollTop = output.scrollHeight;
               read();
             });
           }

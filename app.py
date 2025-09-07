@@ -66,18 +66,29 @@ def fetch_and_cache_options_data(symbol, expiry_date):
 def stream_analysis_with_gemini(symbol, expiry_date, options_data_json):
     current_date = datetime.now().strftime("%Y-%m-%d") # Provide current date to Gemini
     prompt = f"""
-    You are an expert options trader. Analyze the following NSE options chain data for **{symbol}** with an expiry date of **{expiry_date}**.
+    You are an expert options trader. Provide a highly detailed, insightful, and actionable analysis of the following NSE options chain data for **{symbol}** with an expiry date of **{expiry_date}**.
     The current date is {current_date}.
 
-    Provide a concise, catchy, and highly readable analysis formatted using **Markdown**.
-    Ensure there are clear paragraph breaks and use bolding for key terms.
+    Format your response using **Markdown**, ensuring excellent readability with clear headings, bolded key terms, and well-structured bullet points. Each bullet point should be comprehensive and provide sufficient detail for understanding.
 
     Specifically:
-    *   Start with an engaging title, clearly stating the symbol and expiry date, and whether this is a near-term, mid-term, or long-dated expiry in relation to the current date.
-    *   **Top 3 Strategy Picks:** Identify and suggest the top 3 potential options trading strategies (e.g., Iron Condor, Strangle, Bull Call Spread, Bear Put Spread, Covered Call, Protective Put, Butterfly Spread, Calendar Spread) based on Open Interest (OI), Volume, and Implied Volatility (IV) trends. For each strategy, explain *why* it's suggested and its potential outlook.
-    *   **Unusual Activity Alert:** Detect any significant unusual activity, such as large OI buildups/reductions on specific strikes, unusual volume spikes, or sudden shifts in IV.
-    *   **Actionable Insights:** Suggest specific trading opportunities. This could include potential entry/exit conditions, target levels, or risk considerations.
-    *   **Credit Spreads Spotlight:** Summarize potential credit spreads (call + put) that show high liquidity and attractive premium capture opportunities.
+    *   **Market Snapshot & Expiry Context:** Start with an engaging title. Clearly state the symbol and expiry date, and provide a detailed assessment of whether this is a near-term, mid-term, or long-dated expiry relative to the current date. Discuss its implications for time decay and volatility.
+    *   **Top 3 Strategy Picks (Detailed):**
+        *   Identify and thoroughly explain the top 3 potential options trading strategies (e.g., Iron Condor, Strangle, Bull Call Spread, Bear Put Spread, Covered Call, Protective Put, Butterfly Spread, Calendar Spread).
+        *   For EACH strategy, elaborate on:
+            *   **Why it's suggested:** Link directly to Open Interest (OI), Volume, and Implied Volatility (IV) trends observed in the data.
+            *   **Market Outlook:** What kind of market movement (bullish, bearish, neutral, volatile) would favor this strategy?
+            *   **Key Strikes/Levels:** Suggest potential strike prices or ranges based on the data.
+            *   **Risk/Reward Profile:** Briefly explain the typical risk and reward characteristics.
+    *   **Unusual Activity & Volatility Alert (In-depth):**
+        *   Detect and describe any significant unusual activity. This includes large OI buildups or reductions on specific strike prices, unusually high or low trading volumes, or sudden and notable shifts in Implied Volatility (IV) across the chain.
+        *   Explain what these anomalies might imply for future price movements or market sentiment.
+    *   **Actionable Insights & Entry/Exit Considerations:**
+        *   Suggest specific, actionable trading opportunities. This could involve identifying key support/resistance levels from OI, potential entry/exit conditions based on price action or IV, or conditions under which a strategy might be initiated or adjusted.
+        *   Provide specific criteria for decision-making.
+    *   **Credit Spreads Spotlight (High Liquidity & Premium):**
+        *   Summarize in detail any attractive credit spreads (call + put) that exhibit both high liquidity (significant OI and Volume) and offer good premium capture opportunities.
+        *   For each suggested credit spread, specify the likely strike prices, the rationale behind the selection, and the expected premium.
 
     Data:
     {json.dumps(options_data_json, indent=2)}
